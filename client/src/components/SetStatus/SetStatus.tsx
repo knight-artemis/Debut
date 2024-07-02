@@ -33,7 +33,6 @@ export default function SetStatus() {
 
   return (
     <>
-      <span>Тут подтверждаем статус</span>
       <button onClick={confirm}>Подтвердить статус</button>;
     </>
   );

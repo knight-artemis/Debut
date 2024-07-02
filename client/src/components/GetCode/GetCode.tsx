@@ -26,7 +26,6 @@ export default function GetCode() {
 
   return (
     <>
-      <span>Тут получаем код</span>
       <button onClick={getCode}>Получить код</button>
       <span>{code}</span>
     </>

@@ -28,7 +28,6 @@ export default function RegistrationForm() {
 
   return (
     <form>
-      <span>Тут регистрируемся</span>
       <input
         type="text"
         placeholder="Фамилия"
