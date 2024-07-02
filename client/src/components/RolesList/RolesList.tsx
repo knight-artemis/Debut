@@ -13,7 +13,8 @@ export default function RolesList() {
 
   return (
     <>
-      <button onClick={requestRoles}>TestButton</button>
+      <span>Тут получаем список ролей</span>
+      <button onClick={requestRoles}>Получить список ролей</button>
       {data && data.length ? (
         data.map((el, index) => <span key={index}>{el}</span>)
       ) : (
