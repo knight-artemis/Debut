@@ -1,7 +1,10 @@
 import axios from "axios";
+import style from "./SetStatus.module.scss";
+import { notifySuccess, notifyWarning } from "../../toasters";
 
 export default function SetStatus() {
   const confirm = async () => {
+    // Добавить сюда проверку на то, что у нас email не 0 символов
     try {
       const code = localStorage.getItem("code");
       let finalCode = "";
@@ -15,8 +18,6 @@ export default function SetStatus() {
       }
       const totalString = `${email}:${finalCode}`;
       const finalString = btoa(totalString);
-      console.log("🚀 ~ confirm ~ finalString:", finalString);
-      console.log("🚀 ~ confirm ~ totalString:", totalString);
       const request = await axios.post(
         "http://193.19.100.32:7000/api/set-status",
         {
@@ -26,14 +27,19 @@ export default function SetStatus() {
       );
       if (request.status === 200) {
         console.log("Успешно внесён", request.data);
+        notifySuccess("Данные успешно внесены");
         localStorage.clear();
       }
-    } catch (error) {}
+    } catch (error) {
+      notifyWarning("Что-то пошло не так, попробуйте ещё раз");
+      console.log(error);
+    }
   };
 
   return (
-    <>
-      <button onClick={confirm}>Подтвердить статус</button>;
-    </>
+    <div className={style.container}>
+      <span>4 шаг</span>
+      <button onClick={confirm}>Подтвердить статус</button>
+    </div>
   );
 }

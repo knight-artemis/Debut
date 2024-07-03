@@ -1,0 +1,10 @@
+.regForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  input {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+}

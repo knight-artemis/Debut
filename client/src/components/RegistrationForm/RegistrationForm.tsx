@@ -1,5 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import style from "./RegistrationForm.module.scss";
+import { notifySuccess, notifyWarning } from "../../toasters";
 
 export default function RegistrationForm() {
   const initialState = { last_name: "", first_name: "", email: "", role: "" };
@@ -10,24 +12,33 @@ export default function RegistrationForm() {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
   const registration = async () => {
-    try {
-      console.log(inputs, 'у меня срабатывает только вот это');
-      const newMember = await axios.post(
-        "http://193.19.100.32:7000/api/sign-up",
-        inputs
-      );
-      console.log('а вот это уже не срабатывает');
-      localStorage.setItem("memberData", JSON.stringify(inputs));
-      if (newMember.status === 200) {
-        console.log("Успешная регистрация");
+    if (
+      inputs.last_name.length &&
+      inputs.first_name.length &&
+      inputs.email.length &&
+      inputs.role.length
+    ) {
+      try {
+        const newMember = await axios.post(
+          "http://193.19.100.32:7000/api/sign-up",
+          inputs
+        );
+        localStorage.setItem("memberData", JSON.stringify(inputs));
+        if (newMember.status === 200) {
+          notifySuccess("Регистрация прошла успешно");
+        }
+      } catch (error) {
+        console.log(error);
+        notifyWarning("Что-то пошол не так, попробуйте ещё раз");
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      notifyWarning("Заполните все поля");
     }
   };
 
   return (
-    <form>
+    <form className={style.regForm}>
+      <span>2 шаг</span>
       <input
         type="text"
         placeholder="Фамилия"
