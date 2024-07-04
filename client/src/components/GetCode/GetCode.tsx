@@ -2,12 +2,14 @@ import axios from "axios";
 import { useState } from "react";
 import style from "./GetCode.module.scss";
 import { notifyWarning } from "../../toasters";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function GetCode() {
   const [code, setCode] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const getCode = async () => {
-    // Добавить сюда проверку на то, что у нас email не 0 символов
+    setLoading(true);
     try {
       const adress = localStorage.getItem("memberData");
       let finalAdress = "";
@@ -28,6 +30,8 @@ export default function GetCode() {
     } catch (error) {
       console.log(error);
       notifyWarning("Что-то пошло не так, попробуйте ещё раз");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,8 +43,16 @@ export default function GetCode() {
   return (
     <div className={style.container}>
       <span className={style.step}>3 шаг</span>
-      <button onClick={getCode}>Получить код</button>
-      <span className={style.code}>Ваш код: {maskedCode}</span>
+      {loading ? (
+        <ClipLoader color="#36d7b7" size={50} loading={loading} />
+      ) : (
+        <button onClick={getCode}>Получить код</button>
+      )}
+      {code.length ? (
+        <span className={style.code}>Ваш код: {maskedCode}</span>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

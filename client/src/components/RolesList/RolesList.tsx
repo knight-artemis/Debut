@@ -1,35 +1,39 @@
 import axios from "axios";
+import style from "./RolesList.module.scss";
+import { notifySuccess, notifyWarning } from "../../toasters";
 import { useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-import style from "./RolesList.module.scss";
 
-export default function RolesList() {
-  const [data, setData] = useState<string[]>([]);
+export default function RolesList({
+  setRoles,
+}: {
+  setRoles: React.Dispatch<React.SetStateAction<string[]>>;
+}) {
   const [loading, setLoading] = useState(false);
 
   async function requestRoles() {
     setLoading(true);
-    const response = await axios.get<{ roles: string[] }>(
-      "http://193.19.100.32:7000/api/get-roles"
-    );
-    setData(response.data.roles);
-    setLoading(false);
+    try {
+      const response = await axios.get<{ roles: string[] }>(
+        "http://193.19.100.32:7000/api/get-roles"
+      );
+      setRoles(response.data.roles);
+      notifySuccess("Список ролей получен и доступен на шаге 2");
+    } catch (error) {
+      notifyWarning("Что-то пошло не так, попробуйте ещё раз");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <div className={style.container}>
       <span className={style.step}>1 шаг</span>
-      <button onClick={requestRoles}>Получить список ролей</button>
       {loading ? (
-        <ClipLoader color={"#000"} loading={loading} size={35} className={style.loader}/>
+        <ClipLoader color="#36d7b7" size={50} loading={loading} />
       ) : (
-        <div className={style.list}>
-          {data && data.length ? (
-            data.map((el, index) => <span key={index}>{el}</span>)
-          ) : (
-            <></>
-          )}
-        </div>
+        <button onClick={requestRoles}>Получить список ролей</button>
       )}
     </div>
   );

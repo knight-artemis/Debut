@@ -16,16 +16,26 @@ main {
 }
 
 button {
-    display: inline-block;
-    background-color: #00aae6;
-    padding: .5em 1em;
-    border: 1px solid #00aae6;
-    border-radius: 10em;
-    text-decoration: none;
-    line-height: 1;
-    text-align: center;
-    font-size: 1em;
-    font-weight: 500;
-    color: #fbfbfd;
-    cursor: pointer;
+  display: inline-block;
+  background-color: #00aae6;
+  padding: 0.5em 1em;
+  border: 1px solid #00aae6;
+  border-radius: 10em;
+  text-decoration: none;
+  line-height: 1;
+  text-align: center;
+  font-size: 1em;
+  font-weight: 500;
+  color: #fbfbfd;
+  cursor: pointer;
+}
+
+input {
+  width: 250px;
+  box-sizing: border-box;
+}
+
+select {
+  width: 250px;
+  box-sizing: border-box;
 }

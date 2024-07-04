@@ -2,15 +2,19 @@ import axios from "axios";
 import { useState } from "react";
 import style from "./RegistrationForm.module.scss";
 import { notifySuccess, notifyWarning } from "../../toasters";
+import ClipLoader from "react-spinners/ClipLoader";
 
-export default function RegistrationForm() {
+export default function RegistrationForm({ roles }: { roles: string[] }) {
   const initialState = { last_name: "", first_name: "", email: "", role: "" };
-
   const [inputs, setInputs] = useState(initialState);
+  const [loading, setLoading] = useState(false);
 
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const changeHandler = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
   const registration = async () => {
     if (
       inputs.last_name.length &&
@@ -18,6 +22,7 @@ export default function RegistrationForm() {
       inputs.email.length &&
       inputs.role.length
     ) {
+      setLoading(true);
       try {
         const newMember = await axios.post(
           "http://193.19.100.32:7000/api/sign-up",
@@ -30,6 +35,8 @@ export default function RegistrationForm() {
       } catch (error) {
         console.log(error);
         notifyWarning("Что-то пошол не так, попробуйте ещё раз");
+      } finally {
+        setLoading(false);
       }
     } else {
       notifyWarning("Заполните все поля");
@@ -63,17 +70,21 @@ export default function RegistrationForm() {
         value={inputs.email}
         required
       />
-      <input
-        type="text"
-        placeholder="Роль"
-        onChange={changeHandler}
-        name="role"
-        value={inputs.role}
-        required
-      />
-      <button type="button" onClick={registration}>
-        Записаться в кандидаты
-      </button>
+      <select onChange={changeHandler} name="role" value={inputs.role} required>
+        <option value="">Выберите роль</option>
+        {roles.map((role) => (
+          <option key={role} value={role}>
+            {role}
+          </option>
+        ))}
+      </select>
+      {loading ? (
+        <ClipLoader color="#36d7b7" size={50} loading={loading} />
+      ) : (
+        <button type="button" onClick={registration}>
+          Записаться в кандидаты
+        </button>
+      )}
     </form>
   );
 }

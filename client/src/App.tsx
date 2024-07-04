@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.scss";
 import Card from "./components/Card/Card";
 import GetCode from "./components/GetCode/GetCode";
@@ -7,15 +8,17 @@ import RolesList from "./components/RolesList/RolesList";
 import SetStatus from "./components/SetStatus/SetStatus";
 
 function App() {
+  const [roles, setRoles] = useState<string[]>([]);
+
   return (
     <>
       <Header />
       <main>
         <Card>
-          <RolesList />
+          <RolesList setRoles={setRoles} />
         </Card>
         <Card>
-          <RegistrationForm />
+          <RegistrationForm roles={roles} />
         </Card>
         <Card>
           <GetCode />

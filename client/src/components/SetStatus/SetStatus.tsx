@@ -1,9 +1,14 @@
 import axios from "axios";
 import style from "./SetStatus.module.scss";
 import { notifySuccess, notifyWarning } from "../../toasters";
+import { useState } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function SetStatus() {
+  const [loading, setLoading] = useState(false);
+
   const confirm = async () => {
+    setLoading(true);
     const code = localStorage.getItem("code");
     let finalCode = "";
     if (code) {
@@ -26,13 +31,14 @@ export default function SetStatus() {
           }
         );
         if (request.status === 200) {
-          console.log("Успешно внесён", request.data);
           notifySuccess("Данные успешно внесены");
           localStorage.clear();
         }
       } catch (error) {
         notifyWarning("Что-то пошло не так, попробуйте ещё раз");
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     } else {
       notifyWarning("Вы прошли не все предыдущие шаги");
@@ -42,7 +48,11 @@ export default function SetStatus() {
   return (
     <div className={style.container}>
       <span>4 шаг</span>
-      <button onClick={confirm}>Подтвердить статус</button>
+      {loading ? (
+        <ClipLoader color="#36d7b7" size={50} loading={loading} />
+      ) : (
+        <button onClick={confirm}>Подтвердить статус</button>
+      )}
     </div>
   );
 }
